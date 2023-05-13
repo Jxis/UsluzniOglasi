@@ -41,7 +41,10 @@ namespace UsluzniOglasi.Application.Services
                 var newUser = new AppUser()
                 {
                     Email = userRegisterModel.Email,
-                    UserName = userRegisterModel.UserName
+                    UserName = userRegisterModel.UserName,
+                    FirstName = userRegisterModel.FirstName,
+                    LastName = userRegisterModel.LastName,
+                    DateOfBirth = userRegisterModel.DateOfBirth
                 };
 
                 var newUserResponse = await _userManager.CreateAsync(newUser, userRegisterModel.Password);

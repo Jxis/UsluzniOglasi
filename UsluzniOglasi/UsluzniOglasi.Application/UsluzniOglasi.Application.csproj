@@ -28,4 +28,10 @@
     <ProjectReference Include="..\UsluzniOglasi.Infrastructure\UsluzniOglasi.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mediator\Handlers\" />
+    <Folder Include="Mediator\Commands\" />
+    <Folder Include="Mediator\Queries\" />
+  </ItemGroup>
+
 </Project>
