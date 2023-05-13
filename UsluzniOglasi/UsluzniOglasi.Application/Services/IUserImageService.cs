@@ -6,5 +6,7 @@ namespace UsluzniOglasi.Application.Services
     public interface IUserImageService
     {
         Task<PutObjectResponse> UploadImageAsync(string id, IFormFile file);
+        Task<GetObjectResponse?> GetImageAsync(string id);
+        Task<DeleteObjectResponse?> DeleteImageAsync(string id);
     }
 }

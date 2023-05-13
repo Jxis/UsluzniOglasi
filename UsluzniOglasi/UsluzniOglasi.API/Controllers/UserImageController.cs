@@ -13,7 +13,7 @@ namespace UsluzniOglasi.API.Controllers
         {
             _userImageService= userImageService;
         }
-        [HttpPost("user/{userId}/image")]
+        [HttpPost("users/{userId}/image")]
         public async Task<IActionResult> Upload([FromRoute] string userId,
             [FromForm(Name = "Data")] IFormFile file)
         {
@@ -24,6 +24,27 @@ namespace UsluzniOglasi.API.Controllers
                 return Ok("Uploaded successfully!");
             }
             return BadRequest(response);
+        }
+        [HttpGet("users/{userId}/image")]
+        public async Task<IActionResult> Get([FromRoute] string userId)
+        {
+            var response = await _userImageService.GetImageAsync(userId);
+            if(response is null)
+            {
+                return NotFound();
+            }
+            return File(response.ResponseStream, response.Headers.ContentType);
+        }
+        [HttpDelete("users/{userId}/image")]
+        public async Task<IActionResult> Delete([FromRoute] string userId)
+        {
+            var response = await _userImageService.DeleteImageAsync(userId);
+            return response.HttpStatusCode switch
+            {
+                HttpStatusCode.NoContent => Ok(),
+                HttpStatusCode.NotFound => NotFound(),
+                _ => BadRequest()
+            };
         }
     }
 }
