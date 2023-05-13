@@ -1,6 +1,10 @@
+using Amazon.S3;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using UsluzniOglasi.Application.Services;
 using UsluzniOglasi.Domain.Models;
 using UsluzniOglasi.Infrastructure.Context;
@@ -14,6 +18,26 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<IUserImageService, UserImageService>();
+
+//Autofac
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+//Configure AmazonS3
+var s3Config = new AmazonS3Config
+{
+    ServiceURL = builder.Configuration.GetSection("AWS:ServiceURL").Value,
+    ForcePathStyle = true,
+    RegionEndpoint = Amazon.RegionEndpoint.EUNorth1
+};
+builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterType<AmazonS3Client>()
+    .As<IAmazonS3>()
+    .WithParameter(new TypedParameter(typeof(AmazonS3Config), s3Config))
+    .InstancePerLifetimeScope();
+});
+
 
 //Database connection
 builder.Services.AddDbContext<UserDbContext>(options =>
