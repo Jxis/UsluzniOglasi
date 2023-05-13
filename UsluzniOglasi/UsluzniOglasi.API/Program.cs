@@ -50,6 +50,13 @@ builder.Services.ConfigureApplicationCookie(o =>
     };
 });
 
+builder.Services.AddCors(options =>
+    options.AddPolicy("DevelopPolicy", options =>
+        options.WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+        ));
 
 var app = builder.Build();
 
@@ -66,8 +73,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
 app.UseRouting();
+app.UseCors("DevelopPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
